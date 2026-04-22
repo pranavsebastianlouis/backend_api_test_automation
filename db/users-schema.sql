@@ -3,9 +3,6 @@
 -- Accessed by both Airlines & Cruises services
 -- ============================================
 
-CREATE DATABASE luxe_users;
-\c luxe_users;
-
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 CREATE TABLE users (
