@@ -1,116 +1,126 @@
-Epic ID,Epic Name,Story ID,Story Name,Test Scenario ID,Description,Pre-condition,Test Case ID,Test Steps,Test Data,Expected Result,Actual Result,Pass/Fail,Remarks
-EP-01,Auth API Testing,ST-AUTH-01,Auth Service Health & Availability,TS-AUTH-01,Auth API Health Check,Auth service is running on port 9000,TC-AUTH-001,"1. Send GET /health
-2. Inspect response status and body",No payload required,"Status 200 | Body: {status:'healthy', service:'auth-api', port:9000}",,,
-EP-01,Auth API Testing,ST-AUTH-02,User Registration,TS-AUTH-02,Register new user successfully,Auth service running; email does not exist in DB,TC-AUTH-002,"1. Generate unique email (uuid)
+"Epic ID","Epic Name","Story ID","Story Name","Test Scenario ID","Description","Pre-condition","Test Case ID","Test Steps","Test Data","Expected Result","Actual Result","Pass/Fail","Remarks"
+"EP-01","Auth API Testing","ST-AUTH-01","Auth Service Health & Availability","TS-AUTH-01","Auth API Health Check","Auth service is running on port 9000","TC-AUTH-001","1. Send GET /health
+2. Inspect response status and body","No payload required","Status 200 | Body: {status:'healthy', service:'auth-api', port:9000}","","",""
+"EP-01","Auth API Testing","ST-AUTH-02","User Registration","TS-AUTH-02","Register new user successfully","Auth service running; email does not exist in DB","TC-AUTH-002","1. Generate unique email (uuid)
 2. POST /auth/register with full valid payload
-3. Inspect response",email: api_test_<uuid>@luxe-test.dev | password: TestPass@99 | first_name: ApiTest | last_name: User | phone: +10000000000,"Status 201 | Response contains access_token (non-empty) | token_type = 'bearer' | user object with email, first_name, last_name, id",,,
-EP-01,Auth API Testing,ST-AUTH-02,User Registration,TS-AUTH-03,Register with duplicate email,A user with the test email is already registered,TC-AUTH-003,"1. POST /auth/register using an already-registered email
-2. Inspect response",email: (existing registered email) | password: TestPass@99 | first_name: ApiTest | last_name: User,Status 400 | detail: 'Email already registered',,,
-EP-01,Auth API Testing,ST-AUTH-02,User Registration,TS-AUTH-04,Register — missing email field,Auth service is running,TC-AUTH-004,"1. POST /auth/register with email field omitted
-2. Inspect response",password: TestPass@99 | first_name: ApiTest | last_name: User,Status 422 | FastAPI validation error body,,,
-EP-01,Auth API Testing,ST-AUTH-02,User Registration,TS-AUTH-05,Register — missing password field,Auth service is running,TC-AUTH-005,"1. POST /auth/register with password field omitted
-2. Inspect response",email: new_user@luxe-test.dev | first_name: ApiTest | last_name: User,Status 422 | FastAPI validation error body,,,
-EP-01,Auth API Testing,ST-AUTH-02,User Registration,TS-AUTH-06,Register — missing first_name field,Auth service is running,TC-AUTH-006,"1. POST /auth/register with first_name field omitted
-2. Inspect response",email: new_user@luxe-test.dev | password: TestPass@99 | last_name: User,Status 422 | FastAPI validation error body,,,
-EP-01,Auth API Testing,ST-AUTH-02,User Registration,TS-AUTH-07,Register — invalid email format,Auth service is running,TC-AUTH-007,"1. POST /auth/register with malformed email
-2. Inspect response",email: not-an-email | password: TestPass@99 | first_name: ApiTest | last_name: User,Status 422 | EmailStr validation error,,,
-EP-01,Auth API Testing,ST-AUTH-03,User Login,TS-AUTH-08,Login with valid credentials,Test user is registered (api_test_user fixture),TC-AUTH-008,"1. POST /auth/login with valid credentials
-2. Inspect response",email: api_test_user['email'] | password: TestPass@99,Status 200 | access_token is non-empty string | user.email matches registered email,,,
-EP-01,Auth API Testing,ST-AUTH-03,User Login,TS-AUTH-09,Login with wrong password,Test user is registered,TC-AUTH-009,"1. POST /auth/login with correct email but wrong password
-2. Inspect response",email: api_test_user['email'] | password: WrongPassword@1,Status 401 | detail: 'Invalid email or password',,,
-EP-01,Auth API Testing,ST-AUTH-03,User Login,TS-AUTH-10,Login with non-existent email,Auth service is running,TC-AUTH-010,"1. POST /auth/login with unregistered email
-2. Inspect response",email: nobody@luxe-test.dev | password: TestPass@99,Status 401 | detail: 'Invalid email or password',,,
-EP-01,Auth API Testing,ST-AUTH-03,User Login,TS-AUTH-11,Login with empty credentials,Auth service is running,TC-AUTH-011,"1. POST /auth/login with empty strings for both fields
-2. Inspect response",email: '' | password: '',Status 401 or 422 | (EmailStr rejects empty string or logic returns 401),,,
-EP-01,Auth API Testing,ST-AUTH-04,Profile Management,TS-AUTH-12,GET /me with valid token,Test user registered; valid access_token available,TC-AUTH-012,"1. GET /auth/me with Authorization: Bearer {token}
-2. Inspect response",Header: Authorization: Bearer <valid_token>,Status 200 | email matches registered user | id matches api_test_user['user_id'],,,
-EP-01,Auth API Testing,ST-AUTH-04,Profile Management,TS-AUTH-13,GET /me with no token,Auth service is running,TC-AUTH-013,"1. GET /auth/me with no Authorization header
-2. Inspect response",No Authorization header,Status 401,,,
-EP-01,Auth API Testing,ST-AUTH-04,Profile Management,TS-AUTH-14,GET /me with invalid token,Auth service is running,TC-AUTH-014,"1. GET /auth/me with malformed Bearer token
-2. Inspect response",Header: Authorization: Bearer totally.invalid.token,Status 401,,,
-EP-01,Auth API Testing,ST-AUTH-04,Profile Management,TS-AUTH-15,Update profile successfully,Test user registered; valid token available,TC-AUTH-015,"1. PUT /auth/profile with Bearer token and updated fields
-2. Inspect response","Header: Authorization: Bearer <valid_token> | Body: {first_name:'Updated', phone:'+19999999999'}",Status 200 | first_name = 'Updated' | phone = '+19999999999',,,
-EP-01,Auth API Testing,ST-AUTH-04,Profile Management,TS-AUTH-16,Update profile with no token,Auth service is running,TC-AUTH-016,"1. PUT /auth/profile with no Authorization header
-2. Inspect response",No Authorization header | Body: {first_name:'Updated'},Status 401,,,
-EP-02,Airlines API Testing,ST-AIR-01,Airlines Service Health & Availability,TS-AIR-01,Airlines API health check,Airlines service is running on port 9001,TC-AIR-001,"1. Send GET /health
-2. Inspect response status and body",No payload required,Status 200 | Body contains service: 'airlines-api',,,
-EP-02,Airlines API Testing,ST-AIR-02,Airport Management,TS-AIR-02,List all airports,Airlines service running; airports seeded in DB,TC-AIR-002,"1. GET /airports
-2. Inspect response",No payload required,"Status 200 | Response is a list | len >= 1 | Each item has: id, iata_code, name, city, country",,,
-EP-02,Airlines API Testing,ST-AIR-02,Airport Management,TS-AIR-03,Airport search — valid query,Airlines service running; airports seeded,TC-AIR-003,"1. GET /airports/search?q=LON
-2. Inspect response",Query param: q=LON,Status 200 | List with >= 1 result | Each result has iata_code field,,,
-EP-02,Airlines API Testing,ST-AIR-02,Airport Management,TS-AIR-04,Airport search — no match,Airlines service is running,TC-AIR-004,"1. GET /airports/search?q=ZZZNOTEXIST
-2. Inspect response",Query param: q=ZZZNOTEXIST,Status 200 | Empty list [],,,
-EP-02,Airlines API Testing,ST-AIR-02,Airport Management,TS-AIR-05,Airport search — missing q param,Airlines service is running,TC-AIR-005,"1. GET /airports/search (no q param)
-2. Inspect response",No query param,Status 422 | FastAPI validation error,,,
-EP-02,Airlines API Testing,ST-AIR-03,Flight Search,TS-AIR-06,Search flights — success,Airlines service running; airports seeded,TC-AIR-006,"1. GET /airports to fetch two real iata_codes
+3. Inspect response","email: api_test_<uuid>@luxe-test.dev | password: TestPass@99 | first_name: ApiTest | last_name: User | phone: +10000000000","Status 201 | Response contains access_token (non-empty) | token_type = 'bearer' | user object with email, first_name, last_name, id","","",""
+"EP-01","Auth API Testing","ST-AUTH-02","User Registration","TS-AUTH-03","Register with duplicate email","A user with the test email is already registered","TC-AUTH-003","1. POST /auth/register using an already-registered email
+2. Inspect response","email: (existing registered email) | password: TestPass@99 | first_name: ApiTest | last_name: User","Status 400 | detail: 'Email already registered'","","",""
+"EP-01","Auth API Testing","ST-AUTH-02","User Registration","TS-AUTH-04","Register — missing email field","Auth service is running","TC-AUTH-004","1. POST /auth/register with email field omitted
+2. Inspect response","password: TestPass@99 | first_name: ApiTest | last_name: User","Status 422 | FastAPI validation error body","","",""
+"EP-01","Auth API Testing","ST-AUTH-02","User Registration","TS-AUTH-05","Register — missing password field","Auth service is running","TC-AUTH-005","1. POST /auth/register with password field omitted
+2. Inspect response","email: new_user@luxe-test.dev | first_name: ApiTest | last_name: User","Status 422 | FastAPI validation error body","","",""
+"EP-01","Auth API Testing","ST-AUTH-02","User Registration","TS-AUTH-06","Register — missing first_name field","Auth service is running","TC-AUTH-006","1. POST /auth/register with first_name field omitted
+2. Inspect response","email: new_user@luxe-test.dev | password: TestPass@99 | last_name: User","Status 422 | FastAPI validation error body","","",""
+"EP-01","Auth API Testing","ST-AUTH-02","User Registration","TS-AUTH-07","Register — invalid email format","Auth service is running","TC-AUTH-007","1. POST /auth/register with malformed email
+2. Inspect response","email: not-an-email | password: TestPass@99 | first_name: ApiTest | last_name: User","Status 422 | EmailStr validation error","","",""
+"EP-01","Auth API Testing","ST-AUTH-03","User Login","TS-AUTH-08","Login with valid credentials","Test user is registered (api_test_user fixture)","TC-AUTH-008","1. POST /auth/login with valid credentials
+2. Inspect response","email: api_test_user['email'] | password: TestPass@99","Status 200 | access_token is non-empty string | user.email matches registered email","","",""
+"EP-01","Auth API Testing","ST-AUTH-03","User Login","TS-AUTH-09","Login with wrong password","Test user is registered","TC-AUTH-009","1. POST /auth/login with correct email but wrong password
+2. Inspect response","email: api_test_user['email'] | password: WrongPassword@1","Status 401 | detail: 'Invalid email or password'","","",""
+"EP-01","Auth API Testing","ST-AUTH-03","User Login","TS-AUTH-10","Login with non-existent email","Auth service is running","TC-AUTH-010","1. POST /auth/login with unregistered email
+2. Inspect response","email: nobody@luxe-test.dev | password: TestPass@99","Status 401 | detail: 'Invalid email or password'","","",""
+"EP-01","Auth API Testing","ST-AUTH-03","User Login","TS-AUTH-11","Login with empty credentials","Auth service is running","TC-AUTH-011","1. POST /auth/login with empty strings for both fields
+2. Inspect response","email: '' | password: ''","Status 401 or 422 | (EmailStr rejects empty string or logic returns 401)","","",""
+"EP-01","Auth API Testing","ST-AUTH-04","Profile Management","TS-AUTH-12","GET /me with valid token","Test user registered; valid access_token available","TC-AUTH-012","1. GET /auth/me with Authorization: Bearer {token}
+2. Inspect response","Header: Authorization: Bearer <valid_token>","Status 200 | email matches registered user | id matches api_test_user['user_id']","","",""
+"EP-01","Auth API Testing","ST-AUTH-04","Profile Management","TS-AUTH-13","GET /me with no token","Auth service is running","TC-AUTH-013","1. GET /auth/me with no Authorization header
+2. Inspect response","No Authorization header","Status 401","","",""
+"EP-01","Auth API Testing","ST-AUTH-04","Profile Management","TS-AUTH-14","GET /me with invalid token","Auth service is running","TC-AUTH-014","1. GET /auth/me with malformed Bearer token
+2. Inspect response","Header: Authorization: Bearer totally.invalid.token","Status 401","","",""
+"EP-01","Auth API Testing","ST-AUTH-04","Profile Management","TS-AUTH-15","Update profile successfully","Test user registered; valid token available","TC-AUTH-015","1. PUT /auth/profile with Bearer token and updated fields
+2. Inspect response","Header: Authorization: Bearer <valid_token> | Body: {first_name:'Updated', phone:'+19999999999'}","Status 200 | first_name = 'Updated' | phone = '+19999999999'","","",""
+"EP-01","Auth API Testing","ST-AUTH-04","Profile Management","TS-AUTH-16","Update profile with no token","Auth service is running","TC-AUTH-016","1. PUT /auth/profile with no Authorization header
+2. Inspect response","No Authorization header | Body: {first_name:'Updated'}","Status 401","","",""
+"EP-02","Airlines API Testing","ST-AIR-01","Airlines Service Health & Availability","TS-AIR-01","Airlines API health check","Airlines service is running on port 9001","TC-AIR-001","1. Send GET /health
+2. Inspect response status and body","No payload required","Status 200 | Body contains service: 'airlines-api'","","",""
+"EP-02","Airlines API Testing","ST-AIR-02","Airport Management","TS-AIR-02","List all airports","Airlines service running; airports seeded in DB","TC-AIR-002","1. GET /airports
+2. Inspect response","No payload required","Status 200 | Response is a list | len >= 1 | Each item has: id, iata_code, name, city, country","","",""
+"EP-02","Airlines API Testing","ST-AIR-02","Airport Management","TS-AIR-03","Airport search — valid query","Airlines service running; airports seeded","TC-AIR-003","1. GET /airports/search?q=LON
+2. Inspect response","Query param: q=LON","Status 200 | List with >= 1 result | Each result has iata_code field","","",""
+"EP-02","Airlines API Testing","ST-AIR-02","Airport Management","TS-AIR-04","Airport search — no match","Airlines service is running","TC-AIR-004","1. GET /airports/search?q=ZZZNOTEXIST
+2. Inspect response","Query param: q=ZZZNOTEXIST","Status 200 | Empty list []","","",""
+"EP-02","Airlines API Testing","ST-AIR-02","Airport Management","TS-AIR-05","Airport search — missing q param","Airlines service is running","TC-AIR-005","1. GET /airports/search (no q param)
+2. Inspect response","No query param","Status 422 | FastAPI validation error","","",""
+"EP-02","Airlines API Testing","ST-AIR-03","Flight Search","TS-AIR-06","Search flights — success","Airlines service running; airports seeded","TC-AIR-006","1. GET /airports to fetch two real iata_codes
 2. GET /flights/search?origin={iata0}&destination={iata1}&date=2025-12-01&passengers=1&cabin_class=Economy
-3. Inspect response shape",origin: iata_code[0] | destination: iata_code[1] | date: 2025-12-01 | passengers: 1 | cabin_class: Economy,"Status 200 | Response has keys: flights, total, search_params | search_params.origin matches origin (case-insensitive)",,,
-EP-02,Airlines API Testing,ST-AIR-03,Flight Search,TS-AIR-07,Search flights — invalid airport code,Airlines service is running,TC-AIR-007,"1. GET /flights/search?origin=ZZZ&destination=YYY&date=2025-12-01
-2. Inspect response",origin: ZZZ | destination: YYY | date: 2025-12-01,Status 404 | detail: 'Airport not found',,,
-EP-02,Airlines API Testing,ST-AIR-03,Flight Search,TS-AIR-08,Search flights — missing origin param,Airlines service is running,TC-AIR-008,"1. GET /flights/search?destination=LHR&date=2025-12-01 (origin omitted)
-2. Inspect response",destination: LHR | date: 2025-12-01 | (origin omitted),Status 422 | FastAPI validation error,,,
-EP-02,Airlines API Testing,ST-AIR-03,Flight Search,TS-AIR-09,Search flights — missing destination param,Airlines service is running,TC-AIR-009,"1. GET /flights/search?origin=LHR&date=2025-12-01 (destination omitted)
-2. Inspect response",origin: LHR | date: 2025-12-01 | (destination omitted),Status 422 | FastAPI validation error,,,
-EP-02,Airlines API Testing,ST-AIR-03,Flight Search,TS-AIR-10,Search flights — missing date param,Airlines service is running,TC-AIR-010,"1. GET /flights/search?origin=LHR&destination=CDG (date omitted)
-2. Inspect response",origin: LHR | destination: CDG | (date omitted),Status 422 | FastAPI validation error,,,
-EP-02,Airlines API Testing,ST-AIR-03,Flight Search,TS-AIR-11,Get flight by ID — not found,Airlines service is running,TC-AIR-011,"1. GET /flights/00000000-0000-0000-0000-000000000000
-2. Inspect response",flight_id: 00000000-0000-0000-0000-000000000000,Status 404,,,
-EP-02,Airlines API Testing,ST-AIR-04,Airline Booking Management,TS-AIR-12,Create booking — success,Test user authenticated; seeded flight exists,TC-AIR-012,"1. GET /airports — pick two iata codes
+3. Inspect response shape","origin: iata_code[0] | destination: iata_code[1] | date: 2025-12-01 | passengers: 1 | cabin_class: Economy","Status 200 | Response has keys: flights, total, search_params | search_params.origin matches origin (case-insensitive)","","",""
+"EP-02","Airlines API Testing","ST-AIR-03","Flight Search","TS-AIR-07","Search flights — invalid airport code","Airlines service is running","TC-AIR-007","1. GET /flights/search?origin=ZZZ&destination=YYY&date=2025-12-01
+2. Inspect response","origin: ZZZ | destination: YYY | date: 2025-12-01","Status 404 | detail: 'Airport not found'","","",""
+"EP-02","Airlines API Testing","ST-AIR-03","Flight Search","TS-AIR-08","Search flights — missing origin param","Airlines service is running","TC-AIR-008","1. GET /flights/search?destination=LHR&date=2025-12-01 (origin omitted)
+2. Inspect response","destination: LHR | date: 2025-12-01 | (origin omitted)","Status 422 | FastAPI validation error","","",""
+"EP-02","Airlines API Testing","ST-AIR-03","Flight Search","TS-AIR-09","Search flights — missing destination param","Airlines service is running","TC-AIR-009","1. GET /flights/search?origin=LHR&date=2025-12-01 (destination omitted)
+2. Inspect response","origin: LHR | date: 2025-12-01 | (destination omitted)","Status 422 | FastAPI validation error","","",""
+"EP-02","Airlines API Testing","ST-AIR-03","Flight Search","TS-AIR-10","Search flights — missing date param","Airlines service is running","TC-AIR-010","1. GET /flights/search?origin=LHR&destination=CDG (date omitted)
+2. Inspect response","origin: LHR | destination: CDG | (date omitted)","Status 422 | FastAPI validation error","","",""
+"EP-02","Airlines API Testing","ST-AIR-03","Flight Search","TS-AIR-11","Get flight by ID — not found","Airlines service is running","TC-AIR-011","1. GET /flights/00000000-0000-0000-0000-000000000000
+2. Inspect response","flight_id: 00000000-0000-0000-0000-000000000000","Status 404","","",""
+"EP-02","Airlines API Testing","ST-AIR-04","Airline Booking Management","TS-AIR-12","Create booking — success","Test user authenticated; seeded flight exists","TC-AIR-012","1. GET /airports — pick two iata codes
 2. GET /flights/search (loop up to 5 dates) until total > 0
 3. Skip test if no flights found
 4. POST /bookings with auth header and flight_id
-5. Inspect response",Header: Authorization: Bearer <token> | flight_id: <first result id> | passenger_name: ApiTest User | passenger_id_number: PASS123456 | date_of_birth: 1990-01-01 | num_passengers: 1,Status 201 | booking_reference starts with 'LA' | status = 'confirmed' | flight_id matches requested,,,
-EP-02,Airlines API Testing,ST-AIR-04,Airline Booking Management,TS-AIR-13,Get my bookings,Test user authenticated; TC-AIR-012 has run,TC-AIR-013,"1. GET /bookings/my with Authorization header
-2. Inspect response",Header: Authorization: Bearer <token>,Status 200 | Response is a list | At least 1 booking if TC-AIR-012 passed,,,
-EP-02,Airlines API Testing,ST-AIR-04,Airline Booking Management,TS-AIR-14,Get booking by ID,TC-AIR-012 has run; booking_id stored,TC-AIR-014,"1. GET /bookings/{booking_id} with Authorization header
-2. Inspect response",Header: Authorization: Bearer <token> | booking_id: (from TC-AIR-012),Status 200 | id matches requested booking_id,,,
-EP-02,Airlines API Testing,ST-AIR-04,Airline Booking Management,TS-AIR-15,Get booking by ID — no token,TC-AIR-012 has run; booking_id stored,TC-AIR-015,"1. GET /bookings/{booking_id} with NO Authorization header
-2. Inspect response",No Authorization header | booking_id: (from TC-AIR-012),Status 401,,,
-EP-02,Airlines API Testing,ST-AIR-04,Airline Booking Management,TS-AIR-16,Cancel booking — success,TC-AIR-012 has run; booking is 'confirmed',TC-AIR-016,"1. PATCH /bookings/{booking_id}/cancel with Authorization header
-2. Inspect response",Header: Authorization: Bearer <token> | booking_id: (from TC-AIR-012),Status 200 | status = 'cancelled',,,
-EP-02,Airlines API Testing,ST-AIR-04,Airline Booking Management,TS-AIR-17,Cancel already-cancelled booking,TC-AIR-016 has run; booking is 'cancelled',TC-AIR-017,"1. PATCH /bookings/{booking_id}/cancel again (same booking)
-2. Inspect response",Header: Authorization: Bearer <token> | booking_id: (same as TC-AIR-016),Status 400 | detail: 'Already cancelled',,,
-EP-02,Airlines API Testing,ST-AIR-04,Airline Booking Management,TS-AIR-18,Create booking — no auth,Airlines service is running,TC-AIR-018,"1. POST /bookings with no Authorization header
-2. Inspect response",No Authorization header | flight_id: any valid uuid | passenger_name: Test User,Status 401,,,
-EP-02,Airlines API Testing,ST-AIR-04,Airline Booking Management,TS-AIR-19,Create booking — invalid flight ID,Test user authenticated,TC-AIR-019,"1. POST /bookings with auth header and non-existent flight_id
-2. Inspect response",Header: Authorization: Bearer <token> | flight_id: 00000000-0000-0000-0000-000000000000,Status 404,,,
-EP-02,Airlines API Testing,ST-AIR-05,Airline Destinations,TS-AIR-20,Get top destinations,Airlines service running; destinations seeded,TC-AIR-020,"1. GET /destinations/top
-2. Inspect response",No payload required,"Status 200 | Response is a list | Each item has: city, iata_code, country, starting_price",,,
-EP-03,Cruises API Testing,ST-CRU-01,Cruises Service Health & Availability,TS-CRU-01,Cruises API health check,Cruises service is running on port 9002,TC-CRU-001,"1. Send GET /health
-2. Inspect response status and body",No payload required,Status 200 | Body contains service: 'cruises-api',,,
-EP-03,Cruises API Testing,ST-CRU-02,Port Management,TS-CRU-02,List all ports,Cruises service running; ports seeded in DB,TC-CRU-002,"1. GET /ports
-2. Inspect response",No payload required,"Status 200 | Response is a list | len >= 1 | Each item has: id, name, city, country",,,
-EP-03,Cruises API Testing,ST-CRU-02,Port Management,TS-CRU-03,Port search — valid query,Cruises service running; Barcelona seeded,TC-CRU-003,"1. GET /ports/search?q=Bar
-2. Inspect response",Query param: q=Bar,Status 200 | List with >= 1 result | Each result has name/city field,,,
-EP-03,Cruises API Testing,ST-CRU-02,Port Management,TS-CRU-04,Port search — no match,Cruises service is running,TC-CRU-004,"1. GET /ports/search?q=ZZZNOTEXIST
-2. Inspect response",Query param: q=ZZZNOTEXIST,Status 200 | Empty list [],,,
-EP-03,Cruises API Testing,ST-CRU-02,Port Management,TS-CRU-05,Port search — missing q param,Cruises service is running,TC-CRU-005,"1. GET /ports/search (no q param)
-2. Inspect response",No query param,Status 422 | FastAPI validation error,,,
-EP-03,Cruises API Testing,ST-CRU-03,Cruise Search,TS-CRU-06,Search cruises — no filters,Cruises service running; cruises seeded,TC-CRU-006,"1. GET /cruises/search (no params)
-2. Inspect response shape",No query params,"Status 200 | Response has keys: cruises, total",,,
-EP-03,Cruises API Testing,ST-CRU-03,Cruise Search,TS-CRU-07,Search cruises — filter by guests,Cruises seeded with available_cabins >= 2,TC-CRU-007,"1. GET /cruises/search?guests=2
-2. Inspect each result",Query param: guests=2,Status 200 | All results have available_cabins >= 2,,,
-EP-03,Cruises API Testing,ST-CRU-03,Cruise Search,TS-CRU-08,Search cruises — filter by date,Cruises service is running,TC-CRU-008,"1. GET /cruises/search?date=2025-01-01
-2. Inspect response shape only",Query param: date=2025-01-01,"Status 200 | Response has keys: cruises, total",,,
-EP-03,Cruises API Testing,ST-CRU-03,Cruise Search,TS-CRU-09,Get cruise by ID — not found,Cruises service is running,TC-CRU-009,"1. GET /cruises/00000000-0000-0000-0000-000000000000
-2. Inspect response",cruise_id: 00000000-0000-0000-0000-000000000000,Status 404,,,
-EP-03,Cruises API Testing,ST-CRU-04,Cruise Booking Management,TS-CRU-10,Create cruise booking — success,Test user authenticated; seeded cruise with available_cabins >= 1,TC-CRU-010,"1. GET /cruises/search?guests=1 (loop until total > 0)
+5. Inspect response","Header: Authorization: Bearer <token> | flight_id: <first result id> | passenger_name: ApiTest User | passenger_id_number: PASS123456 | date_of_birth: 1990-01-01 | num_passengers: 1","Status 201 | booking_reference starts with 'LA' | status = 'confirmed' | flight_id matches requested","","",""
+"EP-02","Airlines API Testing","ST-AIR-04","Airline Booking Management","TS-AIR-13","Get my bookings","Test user authenticated; TC-AIR-012 has run","TC-AIR-013","1. GET /bookings/my with Authorization header
+2. Inspect response","Header: Authorization: Bearer <token>","Status 200 | Response is a list | At least 1 booking if TC-AIR-012 passed","","",""
+"EP-02","Airlines API Testing","ST-AIR-04","Airline Booking Management","TS-AIR-14","Get booking by ID","TC-AIR-012 has run; booking_id stored","TC-AIR-014","1. GET /bookings/{booking_id} with Authorization header
+2. Inspect response","Header: Authorization: Bearer <token> | booking_id: (from TC-AIR-012)","Status 200 | id matches requested booking_id","","",""
+"EP-02","Airlines API Testing","ST-AIR-04","Airline Booking Management","TS-AIR-15","Get booking by ID — no token","TC-AIR-012 has run; booking_id stored","TC-AIR-015","1. GET /bookings/{booking_id} with NO Authorization header
+2. Inspect response","No Authorization header | booking_id: (from TC-AIR-012)","Status 401","","",""
+"EP-02","Airlines API Testing","ST-AIR-04","Airline Booking Management","TS-AIR-16","Cancel booking — success","TC-AIR-012 has run; booking is 'confirmed'","TC-AIR-016","1. PATCH /bookings/{booking_id}/cancel with Authorization header
+2. Inspect response","Header: Authorization: Bearer <token> | booking_id: (from TC-AIR-012)","Status 200 | status = 'cancelled'","","",""
+"EP-02","Airlines API Testing","ST-AIR-04","Airline Booking Management","TS-AIR-17","Cancel already-cancelled booking","TC-AIR-016 has run; booking is 'cancelled'","TC-AIR-017","1. PATCH /bookings/{booking_id}/cancel again (same booking)
+2. Inspect response","Header: Authorization: Bearer <token> | booking_id: (same as TC-AIR-016)","Status 400 | detail: 'Already cancelled'","","",""
+"EP-02","Airlines API Testing","ST-AIR-04","Airline Booking Management","TS-AIR-18","Create booking — no auth","Airlines service is running","TC-AIR-018","1. POST /bookings with no Authorization header
+2. Inspect response","No Authorization header | flight_id: any valid uuid | passenger_name: Test User","Status 401","","",""
+"EP-02","Airlines API Testing","ST-AIR-04","Airline Booking Management","TS-AIR-19","Create booking — invalid flight ID","Test user authenticated","TC-AIR-019","1. POST /bookings with auth header and non-existent flight_id
+2. Inspect response","Header: Authorization: Bearer <token> | flight_id: 00000000-0000-0000-0000-000000000000","Status 404","","",""
+"EP-02","Airlines API Testing","ST-AIR-05","Airline Destinations","TS-AIR-20","Get top destinations","Airlines service running; destinations seeded","TC-AIR-020","1. GET /destinations/top
+2. Inspect response","No payload required","Status 200 | Response is a list | Each item has: city, iata_code, country, starting_price","","",""
+"EP-02","Airlines API Testing","ST-AIR-03","Flight Search","TS-AIR-21","Get flight by ID — valid flight","Airlines service running; at least one flight seeded for DEL→BLR route","TC-AIR-021","1. Use findFlightsForRoute helper to search DEL→BLR across date window
+2. Skip test if no seeded flights found
+3. Extract flight_id = flights[0].id
+4. GET /flights/{flight_id}
+5. Inspect response status and body","origin: DEL | destination: BLR | flight_id: (first result from search)","Status 200 | Response body validates against flightOutSchema (id, origin, destination, departure_time, arrival_time, price, available_seats, cabin_class)","","",""
+"EP-03","Cruises API Testing","ST-CRU-01","Cruises Service Health & Availability","TS-CRU-01","Cruises API health check","Cruises service is running on port 9002","TC-CRU-001","1. Send GET /health
+2. Inspect response status and body","No payload required","Status 200 | Body contains service: 'cruises-api'","","",""
+"EP-03","Cruises API Testing","ST-CRU-02","Port Management","TS-CRU-02","List all ports","Cruises service running; ports seeded in DB","TC-CRU-002","1. GET /ports
+2. Inspect response","No payload required","Status 200 | Response is a list | len >= 1 | Each item has: id, name, city, country","","",""
+"EP-03","Cruises API Testing","ST-CRU-02","Port Management","TS-CRU-03","Port search — valid query","Cruises service running; Barcelona seeded","TC-CRU-003","1. GET /ports/search?q=Bar
+2. Inspect response","Query param: q=Bar","Status 200 | List with >= 1 result | Each result has name/city field","","",""
+"EP-03","Cruises API Testing","ST-CRU-02","Port Management","TS-CRU-04","Port search — no match","Cruises service is running","TC-CRU-004","1. GET /ports/search?q=ZZZNOTEXIST
+2. Inspect response","Query param: q=ZZZNOTEXIST","Status 200 | Empty list []","","",""
+"EP-03","Cruises API Testing","ST-CRU-02","Port Management","TS-CRU-05","Port search — missing q param","Cruises service is running","TC-CRU-005","1. GET /ports/search (no q param)
+2. Inspect response","No query param","Status 422 | FastAPI validation error","","",""
+"EP-03","Cruises API Testing","ST-CRU-03","Cruise Search","TS-CRU-06","Search cruises — no filters","Cruises service running; cruises seeded","TC-CRU-006","1. GET /cruises/search (no params)
+2. Inspect response shape","No query params","Status 200 | Response has keys: cruises, total","","",""
+"EP-03","Cruises API Testing","ST-CRU-03","Cruise Search","TS-CRU-07","Search cruises — filter by guests","Cruises seeded with available_cabins >= 2","TC-CRU-007","1. GET /cruises/search?guests=2
+2. Inspect each result","Query param: guests=2","Status 200 | All results have available_cabins >= 2","","",""
+"EP-03","Cruises API Testing","ST-CRU-03","Cruise Search","TS-CRU-08","Search cruises — filter by date","Cruises service is running","TC-CRU-008","1. GET /cruises/search?date=2025-01-01
+2. Inspect response shape only","Query param: date=2025-01-01","Status 200 | Response has keys: cruises, total","","",""
+"EP-03","Cruises API Testing","ST-CRU-03","Cruise Search","TS-CRU-09","Get cruise by ID — not found","Cruises service is running","TC-CRU-009","1. GET /cruises/00000000-0000-0000-0000-000000000000
+2. Inspect response","cruise_id: 00000000-0000-0000-0000-000000000000","Status 404","","",""
+"EP-03","Cruises API Testing","ST-CRU-04","Cruise Booking Management","TS-CRU-10","Create cruise booking — success","Test user authenticated; seeded cruise with available_cabins >= 1","TC-CRU-010","1. GET /cruises/search?guests=1 (loop until total > 0)
 2. Skip if none found
 3. POST /cruise-bookings with auth and cruise_id
-4. Inspect response",Header: Authorization: Bearer <token> | cruise_id: <first result id> | passenger_name: ApiTest User | passenger_id_number: PASS123456 | date_of_birth: 1990-01-01 | num_guests: 1,Status 201 | booking_reference starts with 'LC' | status = 'confirmed' | cruise_id matches requested,,,
-EP-03,Cruises API Testing,ST-CRU-04,Cruise Booking Management,TS-CRU-11,Get my cruise bookings,Test user authenticated; TC-CRU-010 has run,TC-CRU-011,"1. GET /cruise-bookings/my with Authorization header
-2. Inspect response",Header: Authorization: Bearer <token>,Status 200 | Response is a list,,,
-EP-03,Cruises API Testing,ST-CRU-04,Cruise Booking Management,TS-CRU-12,Get cruise booking by ID,TC-CRU-010 has run; cruise_booking_id stored,TC-CRU-012,"1. GET /cruise-bookings/{id} with Authorization header
-2. Inspect response",Header: Authorization: Bearer <token> | booking_id: (from TC-CRU-010),Status 200 | id matches requested booking_id,,,
-EP-03,Cruises API Testing,ST-CRU-04,Cruise Booking Management,TS-CRU-13,Get cruise booking — no token,TC-CRU-010 has run; cruise_booking_id stored,TC-CRU-013,"1. GET /cruise-bookings/{id} with NO Authorization header
-2. Inspect response",No Authorization header | booking_id: (from TC-CRU-010),Status 401,,,
-EP-03,Cruises API Testing,ST-CRU-04,Cruise Booking Management,TS-CRU-14,Cancel cruise booking — success,TC-CRU-010 has run; booking is 'confirmed',TC-CRU-014,"1. PATCH /cruise-bookings/{id}/cancel with Authorization header
-2. Inspect response",Header: Authorization: Bearer <token> | booking_id: (from TC-CRU-010),Status 200 | status = 'cancelled',,,
-EP-03,Cruises API Testing,ST-CRU-04,Cruise Booking Management,TS-CRU-15,Cancel already-cancelled cruise booking,TC-CRU-014 has run; booking is 'cancelled',TC-CRU-015,"1. PATCH /cruise-bookings/{id}/cancel again
-2. Inspect response",Header: Authorization: Bearer <token> | booking_id: (same as TC-CRU-014),Status 400 | detail: 'Already cancelled',,,
-EP-03,Cruises API Testing,ST-CRU-04,Cruise Booking Management,TS-CRU-16,Create cruise booking — no auth,Cruises service is running,TC-CRU-016,"1. POST /cruise-bookings with no Authorization header
-2. Inspect response",No Authorization header | cruise_id: any valid uuid,Status 401,,,
-EP-03,Cruises API Testing,ST-CRU-04,Cruise Booking Management,TS-CRU-17,Create cruise booking — invalid cruise ID,Test user authenticated,TC-CRU-017,"1. POST /cruise-bookings with auth header and non-existent cruise_id
-2. Inspect response",Header: Authorization: Bearer <token> | cruise_id: 00000000-0000-0000-0000-000000000000,Status 404,,,
-EP-03,Cruises API Testing,ST-CRU-05,Cruise Destinations,TS-CRU-18,Get top cruise destinations,Cruises service running; destinations seeded,TC-CRU-018,"1. GET /destinations/top
-2. Inspect response",No payload required,"Status 200 | Response is a list | Each item has: city, country, starting_price",,,
+4. Inspect response","Header: Authorization: Bearer <token> | cruise_id: <first result id> | passenger_name: ApiTest User | passenger_id_number: PASS123456 | date_of_birth: 1990-01-01 | num_guests: 1","Status 201 | booking_reference starts with 'LC' | status = 'confirmed' | cruise_id matches requested","","",""
+"EP-03","Cruises API Testing","ST-CRU-04","Cruise Booking Management","TS-CRU-11","Get my cruise bookings","Test user authenticated; TC-CRU-010 has run","TC-CRU-011","1. GET /cruise-bookings/my with Authorization header
+2. Inspect response","Header: Authorization: Bearer <token>","Status 200 | Response is a list","","",""
+"EP-03","Cruises API Testing","ST-CRU-04","Cruise Booking Management","TS-CRU-12","Get cruise booking by ID","TC-CRU-010 has run; cruise_booking_id stored","TC-CRU-012","1. GET /cruise-bookings/{id} with Authorization header
+2. Inspect response","Header: Authorization: Bearer <token> | booking_id: (from TC-CRU-010)","Status 200 | id matches requested booking_id","","",""
+"EP-03","Cruises API Testing","ST-CRU-04","Cruise Booking Management","TS-CRU-13","Get cruise booking — no token","TC-CRU-010 has run; cruise_booking_id stored","TC-CRU-013","1. GET /cruise-bookings/{id} with NO Authorization header
+2. Inspect response","No Authorization header | booking_id: (from TC-CRU-010)","Status 401","","",""
+"EP-03","Cruises API Testing","ST-CRU-04","Cruise Booking Management","TS-CRU-14","Cancel cruise booking — success","TC-CRU-010 has run; booking is 'confirmed'","TC-CRU-014","1. PATCH /cruise-bookings/{id}/cancel with Authorization header
+2. Inspect response","Header: Authorization: Bearer <token> | booking_id: (from TC-CRU-010)","Status 200 | status = 'cancelled'","","",""
+"EP-03","Cruises API Testing","ST-CRU-04","Cruise Booking Management","TS-CRU-15","Cancel already-cancelled cruise booking","TC-CRU-014 has run; booking is 'cancelled'","TC-CRU-015","1. PATCH /cruise-bookings/{id}/cancel again
+2. Inspect response","Header: Authorization: Bearer <token> | booking_id: (same as TC-CRU-014)","Status 400 | detail: 'Already cancelled'","","",""
+"EP-03","Cruises API Testing","ST-CRU-04","Cruise Booking Management","TS-CRU-16","Create cruise booking — no auth","Cruises service is running","TC-CRU-016","1. POST /cruise-bookings with no Authorization header
+2. Inspect response","No Authorization header | cruise_id: any valid uuid","Status 401","","",""
+"EP-03","Cruises API Testing","ST-CRU-04","Cruise Booking Management","TS-CRU-17","Create cruise booking — invalid cruise ID","Test user authenticated","TC-CRU-017","1. POST /cruise-bookings with auth header and non-existent cruise_id
+2. Inspect response","Header: Authorization: Bearer <token> | cruise_id: 00000000-0000-0000-0000-000000000000","Status 404","","",""
+"EP-03","Cruises API Testing","ST-CRU-05","Cruise Destinations","TS-CRU-18","Get top cruise destinations","Cruises service running; destinations seeded","TC-CRU-018","1. GET /destinations/top
+2. Inspect response","No payload required","Status 200 | Response is a list | Each item has: city, country, starting_price","","",""
+"EP-03","Cruises API Testing","ST-CRU-03","Cruise Search","TS-CRU-19","Get cruise by ID — valid cruise","Cruises service running; at least one cruise seeded with guests=1 capacity","TC-CRU-019","1. GET /cruises/search?guests=1
+2. Assert status 200 and total > 0 (skip if empty)
+3. Extract cruise_id = cruises[0].id
+4. GET /cruises/{cruise_id}
+5. Inspect response status and body","guests: 1 | cruise_id: (first result from search)","Status 200 | Response body validates against cruiseOutSchema (id, name, departure_port, destination, departure_date, duration_days, price_per_person, available_cabins)","","",""
