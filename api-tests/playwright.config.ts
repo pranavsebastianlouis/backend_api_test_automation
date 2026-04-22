@@ -17,6 +17,7 @@ export default defineConfig({
   reporter: [
     ['list'],
     ['html', { open: 'never', outputFolder: 'playwright-report' }],
+    ['allure-playwright', { outputFolder: 'allure-results', detail: true, suiteTitle: false }],
     ['github'],
   ],
   globalSetup: path.join(__dirname, 'global-setup.ts'),

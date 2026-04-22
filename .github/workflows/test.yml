@@ -12,6 +12,10 @@ jobs:
   api-playwright:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
 
     steps:
       - name: Checkout
@@ -24,13 +28,22 @@ jobs:
           cache: npm
           cache-dependency-path: api-tests/package-lock.json
 
+      - name: Setup Java (required for Allure CLI)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
       - name: Install npm dependencies
         working-directory: api-tests
         run: npm ci
 
-      - name: Install Playwright runtime
+      # API-only suite: don't download browsers in CI (faster + avoids host dependency warnings).
+      - name: Install Playwright runtime (no browsers)
         working-directory: api-tests
-        run: npx playwright install
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+        run: node -e "console.log('Skipping browser downloads (API-only)')"
 
       - name: Start Docker Compose stack
         run: docker compose up -d --build
@@ -43,10 +56,16 @@ jobs:
         working-directory: api-tests
         env:
           CI: 'true'
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
           AUTH_BASE_URL: http://127.0.0.1:9000
           AIRLINES_BASE_URL: http://127.0.0.1:9001
           CRUISES_BASE_URL: http://127.0.0.1:9002
         run: npx playwright test
+
+      - name: Generate Allure dashboard (defects-style report)
+        if: always()
+        working-directory: api-tests
+        run: npm run report:allure
 
       - name: Add summary link (HTML report artifact)
         if: always()
@@ -54,6 +73,7 @@ jobs:
           echo "## Playwright API results" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "Download the **playwright-api-report** artifact for the interactive HTML dashboard (open \`index.html\`)." >> "$GITHUB_STEP_SUMMARY"
+          echo "Allure dashboard will be published to GitHub Pages (see job **Deploy Allure dashboard to Pages**)." >> "$GITHUB_STEP_SUMMARY"
           echo "The job log above includes the pass/fail line summary from the \`list\` reporter." >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload HTML report
@@ -63,6 +83,35 @@ jobs:
           name: playwright-api-report
           path: api-tests/playwright-report
           retention-days: 14
+
+      - name: Upload Allure dashboard artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: api-tests/allure-report
+          retention-days: 14
+
+      - name: Upload Pages artifact (Allure report)
+        if: always()
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: api-tests/allure-report
+
+  deploy-pages:
+    if: always()
+    needs: api-playwright
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy Allure dashboard to Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
       - name: Upload test results (traces etc.)
         if: failure()
