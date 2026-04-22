@@ -99,7 +99,9 @@ jobs:
           path: api-tests/allure-report
 
   deploy-pages:
-    if: always()
+    # Pages deployments typically require Pages to be enabled in repo settings and
+    # should not run for pull_request events.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: api-playwright
     runs-on: ubuntu-latest
     permissions:
