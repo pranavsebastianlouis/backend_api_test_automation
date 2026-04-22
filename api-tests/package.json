@@ -1,0 +1,23 @@
+{
+  "name": "luxe-api-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright API automation for LUXE Travel Platform microservices",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report",
+    "wait:services": "node scripts/wait-for-services.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@types/node": "^22.10.0",
+    "dotenv": "^16.4.5",
+    "typescript": "^5.7.2",
+    "zod": "^3.23.8"
+  }
+}
