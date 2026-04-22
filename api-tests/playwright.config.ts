@@ -47,5 +47,10 @@ export default defineConfig({
       testMatch: /api\/cruises\/.*\.spec\.ts/,
       use: { baseURL: cruisesUrl },
     },
+    {
+      name: 'coverage',
+      testMatch: /api\/testcaseCoverage\.spec\.ts/,
+      use: {},
+    },
   ],
 });
