@@ -1,0 +1,125 @@
+version: "3.9"
+
+# ============================================================
+# LUXE Travel Platform  —  docker-compose.yml
+#
+# Services:
+#   postgres-users    (5432)  → shared user auth DB
+#   postgres-airlines (5433)  → airlines DB
+#   postgres-cruises  (5434)  → cruises DB
+#   auth-api          (9000)  → FastAPI JWT auth service
+#   airlines-api      (9001)  → FastAPI airlines service
+#   cruises-api       (9002)  → FastAPI cruises service
+#
+# Frontends (run separately with npm — see README):
+#   airlines  →  http://localhost:8001
+#   cruises   →  http://localhost:8002
+#   auth      →  http://localhost:8003
+# ============================================================
+
+services:
+
+  # ── Databases ──────────────────────────────────────────────
+  postgres-users:
+    image: postgres:16-alpine
+    container_name: luxe_postgres_users
+    environment:
+      POSTGRES_USER:     postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB:       luxe_users
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_users_data:/var/lib/postgresql/data
+      - ./db/users-schema.sql:/docker-entrypoint-initdb.d/01_users.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d luxe_users"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  postgres-airlines:
+    image: postgres:16-alpine
+    container_name: luxe_postgres_airlines
+    environment:
+      POSTGRES_USER:     postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB:       luxe_airlines
+    ports:
+      - "5433:5432"
+    volumes:
+      - pg_airlines_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d luxe_airlines"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  postgres-cruises:
+    image: postgres:16-alpine
+    container_name: luxe_postgres_cruises
+    environment:
+      POSTGRES_USER:     postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB:       luxe_cruises
+    ports:
+      - "5434:5432"
+    volumes:
+      - pg_cruises_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d luxe_cruises"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── Backend APIs ───────────────────────────────────────────
+  auth-api:
+    build:
+      context: ./backend/auth-api
+      dockerfile: Dockerfile
+    container_name: luxe_auth_api
+    ports:
+      - "9000:9000"
+    environment:
+      DATABASE_URL:       postgresql+asyncpg://postgres:postgres@postgres-users:5432/luxe_users
+      SECRET_KEY:         LUXE_SUPER_SECRET_CHANGE_IN_PROD_2024
+      TOKEN_EXPIRE_MINS:  "1440"
+    depends_on:
+      postgres-users:
+        condition: service_healthy
+    command: uvicorn main:app --host 0.0.0.0 --port 9000 --reload
+
+  airlines-api:
+    build:
+      context: ./backend/airlines-api
+      dockerfile: Dockerfile
+    container_name: luxe_airlines_api
+    ports:
+      - "9001:9001"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@postgres-airlines:5432/luxe_airlines
+      SECRET_KEY:   LUXE_SUPER_SECRET_CHANGE_IN_PROD_2024
+    depends_on:
+      postgres-airlines:
+        condition: service_healthy
+    command: uvicorn main:app --host 0.0.0.0 --port 9001 --reload
+
+  cruises-api:
+    build:
+      context: ./backend/cruises-api
+      dockerfile: Dockerfile
+    container_name: luxe_cruises_api
+    ports:
+      - "9002:9002"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@postgres-cruises:5432/luxe_cruises
+      SECRET_KEY:   LUXE_SUPER_SECRET_CHANGE_IN_PROD_2024
+    depends_on:
+      postgres-cruises:
+        condition: service_healthy
+    command: uvicorn main:app --host 0.0.0.0 --port 9002 --reload
+
+volumes:
+  pg_users_data:
+  pg_airlines_data:
+  pg_cruises_data:
