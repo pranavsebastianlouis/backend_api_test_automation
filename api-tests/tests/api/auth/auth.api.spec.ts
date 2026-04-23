@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../../fixtures/test';
 import { createApiClient } from '../../utils/apiClient';
 import { bearerHeaders, readStoredAuth } from '../../utils/authHelper';
 import { getHealth } from '../../utils/health';

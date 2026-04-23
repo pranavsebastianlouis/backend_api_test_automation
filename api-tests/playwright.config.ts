@@ -1,6 +1,7 @@
 import { defineConfig } from '@playwright/test';
 import * as dotenv from 'dotenv';
 import * as path from 'path';
+import { DEFAULT_EXTRA_HEADERS } from './tests/utils/httpDefaults';
 
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
@@ -23,9 +24,7 @@ export default defineConfig({
   globalSetup: path.join(__dirname, 'global-setup.ts'),
   use: {
     trace: 'on-first-retry',
-    extraHTTPHeaders: {
-      Accept: 'application/json',
-    },
+    extraHTTPHeaders: DEFAULT_EXTRA_HEADERS,
   },
   expect: {
     timeout: 15_000,

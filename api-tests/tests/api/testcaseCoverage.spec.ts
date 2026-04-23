@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../fixtures/test';
 import * as fs from 'fs';
 import * as path from 'path';
 import { applyAllureMeta } from '../utils/allureMeta';

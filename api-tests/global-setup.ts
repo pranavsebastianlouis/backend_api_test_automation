@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { tokenOutSchema } from './tests/utils/schemas/auth.zod';
 import { uniqueEmail, strongPassword } from './tests/fixtures/testData';
+import { DEFAULT_EXTRA_HEADERS } from './tests/utils/httpDefaults';
 
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
@@ -16,7 +17,7 @@ async function globalSetup() {
 
   const ctx = await request.newContext({
     baseURL: authBase,
-    extraHTTPHeaders: { Accept: 'application/json' },
+    extraHTTPHeaders: DEFAULT_EXTRA_HEADERS,
   });
 
   let accessToken: string;
