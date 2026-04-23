@@ -9,6 +9,7 @@
     "test:ui": "playwright test --ui",
     "report": "playwright show-report",
     "report:allure": "allure generate ./allure-results --clean -o ./allure-report",
+    "report:allure:ci": "node scripts/write-allure-ci-meta.mjs && npm run report:allure",
     "wait:services": "node scripts/wait-for-services.mjs"
   },
   "engines": {

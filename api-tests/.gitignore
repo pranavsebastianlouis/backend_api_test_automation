@@ -4,6 +4,7 @@ test-results/
 playwright-report/
 allure-results/
 allure-report/
+allure-history/
 playwright/.cache/
 .cache/
 .env

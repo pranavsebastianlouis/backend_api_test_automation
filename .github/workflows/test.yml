@@ -62,10 +62,55 @@ jobs:
           CRUISES_BASE_URL: http://127.0.0.1:9002
         run: npx playwright test
 
+      # Allure "Trend" charts require the previous run's `history/` directory to be fed back into `allure-results/history`.
+      # We persist that directory across workflow runs via Actions cache (scoped per repo + workflow + branch).
+      #
+      # Note: we only maintain this cache on `main` pushes to avoid creating a brand-new cache entry on every PR run.
+      - name: Restore Allure history (for Trend widgets)
+        if: always() && github.ref == 'refs/heads/main'
+        uses: actions/cache/restore@v4
+        with:
+          path: api-tests/allure-history
+          key: allure-history-${{ github.repository }}-${{ github.workflow }}-${{ github.ref_name }}-${{ github.run_id }}
+          restore-keys: |
+            allure-history-${{ github.repository }}-${{ github.workflow }}-${{ github.ref_name }}-
+
+      - name: Seed Allure history into results
+        if: always() && github.ref == 'refs/heads/main'
+        working-directory: api-tests
+        run: |
+          mkdir -p allure-results
+          if [ -d allure-history ] && [ "$(ls -A allure-history 2>/dev/null)" ]; then
+            rm -rf allure-results/history
+            cp -R allure-history allure-results/history
+          fi
+
       - name: Generate Allure dashboard (defects-style report)
         if: always()
         working-directory: api-tests
-        run: npm run report:allure
+        env:
+          AUTH_BASE_URL: http://127.0.0.1:9000
+          AIRLINES_BASE_URL: http://127.0.0.1:9001
+          CRUISES_BASE_URL: http://127.0.0.1:9002
+        run: npm run report:allure:ci
+
+      - name: Persist Allure history for next run
+        if: always() && github.ref == 'refs/heads/main'
+        working-directory: api-tests
+        run: |
+          rm -rf allure-history
+          if [ -d allure-report/history ]; then
+            cp -R allure-report/history allure-history
+          else
+            mkdir -p allure-history
+          fi
+
+      - name: Save Allure history cache
+        if: always() && github.ref == 'refs/heads/main'
+        uses: actions/cache/save@v4
+        with:
+          path: api-tests/allure-history
+          key: allure-history-${{ github.repository }}-${{ github.workflow }}-${{ github.ref_name }}-${{ github.run_id }}
 
       - name: Add summary link (HTML report artifact)
         if: always()
