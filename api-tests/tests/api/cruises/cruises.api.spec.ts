@@ -14,7 +14,7 @@ import { applyAllureMeta } from '../../utils/allureMeta';
 
 test.describe('Cruises API', () => {
   test('TC-CRU-001 GET /health returns healthy', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-03',
       epicName: 'Cruises API Testing',
       storyId: 'ST-CRU-01',
@@ -27,7 +27,7 @@ test.describe('Cruises API', () => {
   });
 
   test('TC-CRU-002 GET /ports returns ports', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-03',
       epicName: 'Cruises API Testing',
       storyId: 'ST-CRU-02',
@@ -44,7 +44,7 @@ test.describe('Cruises API', () => {
   });
 
   test('TC-CRU-003 GET /ports/search valid query returns results', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-03',
       epicName: 'Cruises API Testing',
       storyId: 'ST-CRU-02',
@@ -62,7 +62,7 @@ test.describe('Cruises API', () => {
   });
 
   test('TC-CRU-004 GET /ports/search no match returns empty list', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-03',
       epicName: 'Cruises API Testing',
       storyId: 'ST-CRU-02',
@@ -78,7 +78,7 @@ test.describe('Cruises API', () => {
   });
 
   test('TC-CRU-005 GET /ports/search missing q returns 422', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-03',
       epicName: 'Cruises API Testing',
       storyId: 'ST-CRU-02',
@@ -95,7 +95,7 @@ test.describe('Cruises API', () => {
     request,
     baseURL,
   }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-03',
       epicName: 'Cruises API Testing',
       storyId: 'ST-CRU-03',
@@ -115,7 +115,7 @@ test.describe('Cruises API', () => {
     request,
     baseURL,
   }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-03',
       epicName: 'Cruises API Testing',
       storyId: 'ST-CRU-03',
@@ -137,7 +137,7 @@ test.describe('Cruises API', () => {
     request,
     baseURL,
   }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-03',
       epicName: 'Cruises API Testing',
       storyId: 'ST-CRU-03',
@@ -152,7 +152,7 @@ test.describe('Cruises API', () => {
   });
 
   test('TC-CRU-009 GET /cruises/{id} not found returns 404', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-03',
       epicName: 'Cruises API Testing',
       storyId: 'ST-CRU-03',
@@ -169,7 +169,7 @@ test.describe('Cruises API', () => {
     request,
     baseURL,
   }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-03',
       epicName: 'Cruises API Testing',
       storyId: 'ST-CRU-03',
@@ -190,7 +190,7 @@ test.describe('Cruises API', () => {
   });
 
   test('TC-CRU-016 POST /cruise-bookings requires authentication', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-03',
       epicName: 'Cruises API Testing',
       storyId: 'ST-CRU-04',
@@ -209,7 +209,7 @@ test.describe('Cruises API', () => {
   });
 
   test('TC-CRU-010 POST /cruise-bookings creates booking (success)', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-03',
       epicName: 'Cruises API Testing',
       storyId: 'ST-CRU-04',
@@ -236,7 +236,7 @@ test.describe('Cruises API', () => {
   });
 
   test('TC-CRU-011 GET /cruise-bookings/my returns my bookings', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-03',
       epicName: 'Cruises API Testing',
       storyId: 'ST-CRU-04',
@@ -257,7 +257,7 @@ test.describe('Cruises API', () => {
     request,
     baseURL,
   }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-03',
       epicName: 'Cruises API Testing',
       storyId: 'ST-CRU-04',
@@ -291,7 +291,7 @@ test.describe('Cruises API', () => {
     request,
     baseURL,
   }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-03',
       epicName: 'Cruises API Testing',
       storyId: 'ST-CRU-04',
@@ -324,7 +324,7 @@ test.describe('Cruises API', () => {
     request,
     baseURL,
   }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-03',
       epicName: 'Cruises API Testing',
       storyId: 'ST-CRU-04',
@@ -357,7 +357,7 @@ test.describe('Cruises API', () => {
     request,
     baseURL,
   }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-03',
       epicName: 'Cruises API Testing',
       storyId: 'ST-CRU-04',
@@ -395,7 +395,7 @@ test.describe('Cruises API', () => {
     request,
     baseURL,
   }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-03',
       epicName: 'Cruises API Testing',
       storyId: 'ST-CRU-04',
@@ -414,7 +414,7 @@ test.describe('Cruises API', () => {
   });
 
   test('TC-CRU-018 GET /destinations/top returns destinations', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-03',
       epicName: 'Cruises API Testing',
       storyId: 'ST-CRU-05',

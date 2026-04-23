@@ -15,7 +15,7 @@ import { applyAllureMeta } from '../../utils/allureMeta';
 
 test.describe('Airlines API', () => {
   test('TC-AIR-001 GET /health returns healthy', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-02',
       epicName: 'Airlines API Testing',
       storyId: 'ST-AIR-01',
@@ -28,7 +28,7 @@ test.describe('Airlines API', () => {
   });
 
   test('TC-AIR-002 GET /airports returns a list of airports', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-02',
       epicName: 'Airlines API Testing',
       storyId: 'ST-AIR-02',
@@ -45,7 +45,7 @@ test.describe('Airlines API', () => {
   });
 
   test('TC-AIR-003 GET /airports/search valid query returns results', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-02',
       epicName: 'Airlines API Testing',
       storyId: 'ST-AIR-02',
@@ -63,7 +63,7 @@ test.describe('Airlines API', () => {
   });
 
   test('TC-AIR-004 GET /airports/search no match returns empty list', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-02',
       epicName: 'Airlines API Testing',
       storyId: 'ST-AIR-02',
@@ -79,7 +79,7 @@ test.describe('Airlines API', () => {
   });
 
   test('TC-AIR-005 GET /airports/search missing q returns 422', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-02',
       epicName: 'Airlines API Testing',
       storyId: 'ST-AIR-02',
@@ -96,7 +96,7 @@ test.describe('Airlines API', () => {
     request,
     baseURL,
   }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-02',
       epicName: 'Airlines API Testing',
       storyId: 'ST-AIR-03',
@@ -128,7 +128,7 @@ test.describe('Airlines API', () => {
     request,
     baseURL,
   }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-02',
       epicName: 'Airlines API Testing',
       storyId: 'ST-AIR-03',
@@ -145,7 +145,7 @@ test.describe('Airlines API', () => {
   });
 
   test('TC-AIR-008 GET /flights/search missing origin returns 422', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-02',
       epicName: 'Airlines API Testing',
       storyId: 'ST-AIR-03',
@@ -164,7 +164,7 @@ test.describe('Airlines API', () => {
     request,
     baseURL,
   }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-02',
       epicName: 'Airlines API Testing',
       storyId: 'ST-AIR-03',
@@ -180,7 +180,7 @@ test.describe('Airlines API', () => {
   });
 
   test('TC-AIR-010 GET /flights/search missing date returns 422', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-02',
       epicName: 'Airlines API Testing',
       storyId: 'ST-AIR-03',
@@ -196,7 +196,7 @@ test.describe('Airlines API', () => {
   });
 
   test('TC-AIR-011 GET /flights/{id} not found returns 404', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-02',
       epicName: 'Airlines API Testing',
       storyId: 'ST-AIR-03',
@@ -213,7 +213,7 @@ test.describe('Airlines API', () => {
     request,
     baseURL,
   }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-02',
       epicName: 'Airlines API Testing',
       storyId: 'ST-AIR-03',
@@ -232,7 +232,7 @@ test.describe('Airlines API', () => {
   });
 
   test('TC-AIR-018 POST /bookings requires authentication', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-02',
       epicName: 'Airlines API Testing',
       storyId: 'ST-AIR-04',
@@ -251,7 +251,7 @@ test.describe('Airlines API', () => {
   });
 
   test('TC-AIR-012 POST /bookings creates booking (success)', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-02',
       epicName: 'Airlines API Testing',
       storyId: 'ST-AIR-04',
@@ -276,7 +276,7 @@ test.describe('Airlines API', () => {
   });
 
   test('TC-AIR-013 GET /bookings/my returns my bookings', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-02',
       epicName: 'Airlines API Testing',
       storyId: 'ST-AIR-04',
@@ -295,7 +295,7 @@ test.describe('Airlines API', () => {
   });
 
   test('TC-AIR-014 GET /bookings/{id} returns booking by id', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-02',
       epicName: 'Airlines API Testing',
       storyId: 'ST-AIR-04',
@@ -324,7 +324,7 @@ test.describe('Airlines API', () => {
   });
 
   test('TC-AIR-015 GET /bookings/{id} without token returns 401', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-02',
       epicName: 'Airlines API Testing',
       storyId: 'ST-AIR-04',
@@ -352,7 +352,7 @@ test.describe('Airlines API', () => {
   });
 
   test('TC-AIR-016 PATCH /bookings/{id}/cancel cancels booking', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-02',
       epicName: 'Airlines API Testing',
       storyId: 'ST-AIR-04',
@@ -382,7 +382,7 @@ test.describe('Airlines API', () => {
   });
 
   test('TC-AIR-017 PATCH /bookings/{id}/cancel again returns 400', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-02',
       epicName: 'Airlines API Testing',
       storyId: 'ST-AIR-04',
@@ -415,7 +415,7 @@ test.describe('Airlines API', () => {
   });
 
   test('TC-AIR-019 POST /bookings invalid flight_id returns 404', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-02',
       epicName: 'Airlines API Testing',
       storyId: 'ST-AIR-04',
@@ -434,7 +434,7 @@ test.describe('Airlines API', () => {
   });
 
   test('TC-AIR-020 GET /destinations/top returns marketing destinations', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-02',
       epicName: 'Airlines API Testing',
       storyId: 'ST-AIR-05',

@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import * as fs from 'fs';
 import * as path from 'path';
+import { applyAllureMeta } from '../utils/allureMeta';
 
 function readText(filePath: string): string {
   return fs.readFileSync(filePath, 'utf8');
@@ -27,6 +28,15 @@ function extractCsvTestCaseIds(csv: string): string[] {
 
 test.describe('CSV ↔ API test coverage', () => {
   test('every Test Case ID in CSV exists in api-tests specs', async () => {
+    await applyAllureMeta({
+      epicId: 'EP-99',
+      epicName: 'QA Harness',
+      storyId: 'ST-HARNESS-01',
+      storyName: 'Requirements Traceability',
+      testCaseId: 'TC-HARNESS-001',
+      scenarioId: 'TS-HARNESS-01',
+    });
+
     // Playwright runs with cwd = api-tests; keep this robust for local + CI.
     const csvPath = path.resolve(process.cwd(), '..', 'LUXE_API_TestCases.csv');
     const csv = readText(csvPath);

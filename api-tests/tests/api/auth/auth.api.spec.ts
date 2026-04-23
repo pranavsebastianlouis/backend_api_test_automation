@@ -8,7 +8,7 @@ import { applyAllureMeta } from '../../utils/allureMeta';
 
 test.describe('Auth API', () => {
   test('TC-AUTH-001 GET /health returns healthy', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-01',
       epicName: 'Auth API Testing',
       storyId: 'ST-AUTH-01',
@@ -21,7 +21,7 @@ test.describe('Auth API', () => {
   });
 
   test('TC-AUTH-002 POST /auth/register creates user and returns token', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-01',
       epicName: 'Auth API Testing',
       storyId: 'ST-AUTH-02',
@@ -47,7 +47,7 @@ test.describe('Auth API', () => {
   });
 
   test('TC-AUTH-003 POST /auth/register rejects duplicate email', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-01',
       epicName: 'Auth API Testing',
       storyId: 'ST-AUTH-02',
@@ -72,7 +72,7 @@ test.describe('Auth API', () => {
   });
 
   test('TC-AUTH-004 POST /auth/register missing email returns 422', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-01',
       epicName: 'Auth API Testing',
       storyId: 'ST-AUTH-02',
@@ -92,7 +92,7 @@ test.describe('Auth API', () => {
   });
 
   test('TC-AUTH-005 POST /auth/register missing password returns 422', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-01',
       epicName: 'Auth API Testing',
       storyId: 'ST-AUTH-02',
@@ -112,7 +112,7 @@ test.describe('Auth API', () => {
   });
 
   test('TC-AUTH-006 POST /auth/register missing first_name returns 422', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-01',
       epicName: 'Auth API Testing',
       storyId: 'ST-AUTH-02',
@@ -132,7 +132,7 @@ test.describe('Auth API', () => {
   });
 
   test('TC-AUTH-007 POST /auth/register invalid email returns 422', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-01',
       epicName: 'Auth API Testing',
       storyId: 'ST-AUTH-02',
@@ -153,7 +153,7 @@ test.describe('Auth API', () => {
   });
 
   test('TC-AUTH-008 POST /auth/login accepts valid credentials', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-01',
       epicName: 'Auth API Testing',
       storyId: 'ST-AUTH-03',
@@ -175,7 +175,7 @@ test.describe('Auth API', () => {
   });
 
   test('TC-AUTH-009 POST /auth/login rejects invalid password', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-01',
       epicName: 'Auth API Testing',
       storyId: 'ST-AUTH-03',
@@ -197,7 +197,7 @@ test.describe('Auth API', () => {
   });
 
   test('TC-AUTH-010 POST /auth/login rejects non-existent email', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-01',
       epicName: 'Auth API Testing',
       storyId: 'ST-AUTH-03',
@@ -216,7 +216,7 @@ test.describe('Auth API', () => {
     request,
     baseURL,
   }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-01',
       epicName: 'Auth API Testing',
       storyId: 'ST-AUTH-03',
@@ -230,7 +230,7 @@ test.describe('Auth API', () => {
   });
 
   test('TC-AUTH-013 GET /auth/me requires authentication', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-01',
       epicName: 'Auth API Testing',
       storyId: 'ST-AUTH-04',
@@ -244,7 +244,7 @@ test.describe('Auth API', () => {
   });
 
   test('TC-AUTH-014 GET /auth/me invalid token returns 401', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-01',
       epicName: 'Auth API Testing',
       storyId: 'ST-AUTH-04',
@@ -260,7 +260,7 @@ test.describe('Auth API', () => {
   });
 
   test('TC-AUTH-012 GET /auth/me returns profile when authenticated', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-01',
       epicName: 'Auth API Testing',
       storyId: 'ST-AUTH-04',
@@ -277,7 +277,7 @@ test.describe('Auth API', () => {
   });
 
   test('TC-AUTH-015 PUT /auth/profile updates fields', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-01',
       epicName: 'Auth API Testing',
       storyId: 'ST-AUTH-04',
@@ -298,7 +298,7 @@ test.describe('Auth API', () => {
   });
 
   test('TC-AUTH-016 PUT /auth/profile without token returns 401', async ({ request, baseURL }) => {
-    applyAllureMeta({
+    await applyAllureMeta({
       epicId: 'EP-01',
       epicName: 'Auth API Testing',
       storyId: 'ST-AUTH-04',
