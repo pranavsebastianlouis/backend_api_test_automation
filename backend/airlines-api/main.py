@@ -264,7 +264,8 @@ async def search_airports(q: str = Query(..., min_length=1), db: AsyncSession = 
 @app.get("/flights/search")
 async def search_flights(
     origin: str = Query(...), destination: str = Query(...), date: str = Query(...),
-    
+    passengers: int = Query(1), cabin_class: str = Query("Economy"),
+    db: AsyncSession = Depends(get_db),
 ):
     orig_ap = (await db.execute(select(AirportORM).where(AirportORM.iata_code == origin.upper()))).scalar_one_or_none()
     dest_ap = (await db.execute(select(AirportORM).where(AirportORM.iata_code == destination.upper()))).scalar_one_or_none()
