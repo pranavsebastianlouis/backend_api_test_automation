@@ -105,7 +105,14 @@ jobs:
     # Gate the deploy behind a repo variable so the pipeline won't fail with 404
     # until Pages is enabled in Settings → Pages.
     # Set repo variable ENABLE_PAGES=true to turn this on.
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.ENABLE_PAGES == 'true'
+    #
+    # IMPORTANT (GitHub Actions semantics):
+    # A job that `needs:` another job will be SKIPPED if the needed job fails — even if that
+    # failed job uploaded artifacts — unless this job uses `always()`.
+    #
+    # We intentionally publish the Allure report even when Playwright exits non-zero, because
+    # the defects dashboard is most valuable on failures.
+    if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.ENABLE_PAGES == 'true'
     needs: api-playwright
     runs-on: ubuntu-latest
     permissions:
