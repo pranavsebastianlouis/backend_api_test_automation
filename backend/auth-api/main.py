@@ -176,8 +176,7 @@ async def login(body: LoginIn, db: AsyncSession = Depends(get_db)):
     return TokenOut(access_token=create_token(str(user.id)), user=to_user_out(user))
 
 @app.get("/auth/me", response_model=UserOut)
-async def me(current_user: UserORM = Depends(get_current_user)):
-    return to_user_out(current_user)
+
 
 @app.put("/auth/profile", response_model=UserOut)
 async def update_profile(
