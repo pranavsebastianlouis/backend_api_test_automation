@@ -170,7 +170,6 @@ async def register(body: RegisterIn, db: AsyncSession = Depends(get_db)):
 @app.post("/auth/login", response_model=TokenOut)
 async def login(body: LoginIn, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(UserORM).where(UserORM.email == body.email))
-    user   = result.scalar_one_or_none()
     if not user or not verify_password(body.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid email or password")
     return TokenOut(access_token=create_token(str(user.id)), user=to_user_out(user))
