@@ -249,7 +249,16 @@ async def search_cruises(
     departure_port: Optional[str] = Query(None),
     destination:    Optional[str] = Query(None),
     date:           Optional[str] = Query(None),
-
+    guests:         int           = Query(1),
+    cabin_type:     Optional[str] = Query(None),
+    db: AsyncSession = Depends(get_db),
+):
+    q = select(CruiseORM).where(CruiseORM.status == "available",
+                                 CruiseORM.available_cabins >= guests)
+    if departure_port:
+        pr = await db.execute(select(PortORM).where(PortORM.city.ilike(f"%{departure_port}%")))
+        ids = [p.id for p in pr.scalars().all()]
+        if ids: q = q.where(CruiseORM.departure_port_id.in_(ids))
     if destination:
         dr = await db.execute(select(PortORM).where(PortORM.city.ilike(f"%{destination}%")))
         ids = [p.id for p in dr.scalars().all()]
